@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Tribesui</title>
+  <base href="/">
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="stylesheet" href="styles.8ad8e2b2a9bb44a37ff3.css"></head>
+<body>
+  <app-root></app-root>
+  <div><script>
+      var config = {
+          type: Phaser.auto,
+          width: 660,
+          height: 465,
+          scene: {
+              preload: preload,
+              create: create
+          }
+      };
+  
+      var game = new Phaser.Game(config);
+  
+      function preload ()
+      {
+          this.load.image('homebase', 'assets/back_none.jpg');
+          this.load.image('buildings', 'assets/visual-building.png');
+      }
+  
+      function create ()
+      {
+          this.add.image(330, 232, 'homebase');
+          
+          var BuildingsImage = this.add.image(770, 475, 'buildings');
+  
+          BuildingsImage.frame.height = 120;
+  
+          BuildingsImage.frame.width = 140;
+  
+          BuildingsImage.frame.cutHeight = 120;
+  
+          BuildingsImage.frame.cutWidth = 140;
+  
+          BuildingsImage.frame.updateUVs();   
+  
+      }
+  
+      function upadet (){
+          
+      }
+      </script></div>
+  
+<script type="text/javascript" src="runtime.26209474bfa8dc87a77c.js"></script><script type="text/javascript" src="es2015-polyfills.c5dd28b362270c767b34.js" nomodule></script><script type="text/javascript" src="polyfills.8bbb231b43165d65d357.js"></script><script type="text/javascript" src="main.8856aac80dd649371693.js"></script></body>
+</html>
