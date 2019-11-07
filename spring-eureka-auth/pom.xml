@@ -59,11 +59,11 @@
             <artifactId>lombok</artifactId>
             <version>1.18.10</version>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>com.eureka.common</groupId>
             <artifactId>spring-eureka-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-        </dependency>
+        </dependency-->
     </dependencies>
 
     <dependencyManagement>

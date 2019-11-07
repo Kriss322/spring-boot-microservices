@@ -12,6 +12,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.List;
 
+/*
+	To run multiple instances.
+	Go to Run →Configurations/Arguments →VM options and add -Dserver.port=8300
+*/
+
 @SpringBootApplication
 @EnableEurekaClient     // Enable eureka client. It inherits from @EnableDiscoveryClient.
 public class TribesApplication implements CommandLineRunner {

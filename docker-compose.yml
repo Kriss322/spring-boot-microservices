@@ -1,0 +1,102 @@
+version: '3'
+services:
+  mysqldb:
+    image: mysql:5.7
+    container_name: mysqldb
+    ports:
+      - "3306:3306"
+        environment:
+        MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+        MYSQL_USER: root
+        #MYSQL_PASSWORD: password
+        MYSQL_DATABASE: tribes_db
+    volumes:
+        - dbdata:/var/lib/mysql/
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: 'rabbitmq:management'
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  web:
+    container_name: ngnix
+    image: nginx:latest
+    volumes:
+      - /opt/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - /opt/nginx/conf.d:/etc/nginx/conf.d
+      - /opt/www:/opt/www
+
+    ports:
+      - "80:80"
+      
+  auth-server:
+    container_name: auth-server
+    image: auth-server:latest
+    ports:
+      - "9100:9100"
+    entrypoint: /bin/sh
+    command: >
+      -c "
+      while ! (nc -z common-server 9200 && nc -z vault 8200); do sleep 5; echo 'Waiting for vault and common-server services to start-up...'; done;
+      java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8787,suspend=n -jar -Dspring.profiles.active=docker /app.jar
+      "
+      
+  eureka-server:
+    container_name: eureka-server
+    image: eureka-server:latest
+    ports:
+      - "8761:8761"
+    entrypoint: /bin/sh
+    command: >
+      -c "
+      while ! (nc -z common-server 9200 && nc -z vault 8200); do sleep 5; echo 'Waiting for vault and common-server services to start-up...'; done;
+      java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8787,suspend=n -jar -Dspring.profiles.active=docker /app.jar
+      "
+      
+  zuul-gateway:
+    container_name: zuul-gateway
+    image: zuul-gateway:latest
+    ports:
+      - "8762:8762"
+    entrypoint: /bin/sh
+    command: >
+      -c "
+      while ! (nc -z common-server 9200 && nc -z vault 8200); do sleep 5; echo 'Waiting for vault and common-server services to start-up...'; done;
+      java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8787,suspend=n -jar -Dspring.profiles.active=docker /app.jar
+      "
+      
+      
+  message-service:
+    container_name: message-service
+    image: message-service:latest
+    ports:
+      - "9300:9300"
+
+  game-service:
+    container_name: game-service
+    image: game-service:latest
+    ports:
+      - "8080:8080"
+
+  player-service:
+    container_name: player-service:
+    image: player-service::latest
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "8301:8301"
+      - "8300:8300"
+    entrypoint: /bin/sh
+    command: >
+      -c "
+      while ! (nc -z common-server 9200 && nc -z vault 8200); do sleep 5; echo 'Waiting for vault and common-server services to start-up...'; done;
+      java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8787,suspend=n -jar -Dspring.profiles.active=docker /app.jar
+      "  
+      
