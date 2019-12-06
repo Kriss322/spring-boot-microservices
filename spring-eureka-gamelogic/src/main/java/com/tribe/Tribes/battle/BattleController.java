@@ -42,7 +42,7 @@ public class BattleController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/players/{playerId")
+    @GetMapping("/players/{playerId}")
     @ResponseBody
     public List<BattleDTO> getAllBattlesOfPlayer(@PathVariable Integer playerId){
         List<Battle> battles = battleService.getAllBattlesOfPlayer(playerId);

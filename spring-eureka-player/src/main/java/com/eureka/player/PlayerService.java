@@ -21,14 +21,6 @@ public class PlayerService {
     }
 
     public Player getPlayer(Integer id) {
-        PlayerDAO playerDAO = playerRepository.getOne(id);
-        //Player player = new Player(playerDAO);
-
-        Player player = new Player(1,"player1", 300, "Katona");
-        Set<Object> villages = restTemplate.getForObject("http://game-service/players/{id}/villages", Set.class);
-
-        player.setVillages(villages);
-
-        return player;
+        return null;
     }
 }

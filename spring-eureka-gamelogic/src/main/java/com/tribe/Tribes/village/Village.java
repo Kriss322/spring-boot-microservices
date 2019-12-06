@@ -63,7 +63,7 @@ public class Village implements Serializable {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<SoldierUnit> unitsAtHome = new ArrayList<>();
 
-    //TODO implement unit trainings
+    //TODO
     @ElementCollection
     @CollectionTable(
             name = "UNITS_RECRUITMENT",
@@ -126,5 +126,15 @@ public class Village implements Serializable {
         }
 
         this.setCurrentPopulation(this.getCurrentPopulation() - populationOfSoldiers);
+    }
+
+    public int getOverallStrength(){
+        int overallStrength = 0;
+
+        for (SoldierUnit s: this.unitsAtHome) {
+            overallStrength += s.getGeneralDefenseStrength();
+        }
+
+        return overallStrength;
     }
 }

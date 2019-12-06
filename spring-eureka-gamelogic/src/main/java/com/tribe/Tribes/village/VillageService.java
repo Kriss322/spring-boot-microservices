@@ -29,6 +29,7 @@ public class VillageService {
     }
 
     public Village getVillageById(Integer id) {
+        System.out.println("ITT");
         return villageRepository.getOne(id);
     }
 

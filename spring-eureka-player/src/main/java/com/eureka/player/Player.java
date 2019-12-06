@@ -9,6 +9,7 @@ import java.util.Set;
 
 @Data
 public class Player {
+
     public Player(Integer id, String name, Integer playerPoints, String titleInTribe) {
         this.id = id;
         this.name = name;

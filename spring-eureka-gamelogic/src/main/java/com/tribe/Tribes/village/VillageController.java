@@ -43,6 +43,7 @@ public class VillageController {
     @ResponseBody
     public VillageDTO getVillage(@PathVariable("id") Integer id){
 
+        System.out.println("ID" + id);
         return convertToDto(villageService.getVillageById(id));
 
         /*
@@ -61,20 +62,21 @@ public class VillageController {
         return convertToDto(villageEntity);
     }
 
+    @PutMapping
+    @ResponseBody
+    public VillageDTO updateVillage(@RequestBody VillageDTO villageDTO){
+
+        System.out.println(villageDTO);
+        Village villageEntity = convertToEntity(villageDTO);
+        System.out.println("Entity:" + villageEntity);
+        return convertToDto(villageService.updateVillage(villageEntity));
+    }
+
     @PutMapping("/{villageId}")
     @ResponseBody
     public VillageDTO addVillageToPlayer(@PathVariable Integer villageId, Integer playerId){
         Village village = villageService.addVillageToPlayer(villageId, playerId);
         return convertToDto(village);
-    }
-
-    @PutMapping
-    @ResponseBody
-    public VillageDTO updateVillage(@RequestBody VillageDTO villageDTO){
-
-        Village villageEntity = convertToEntity(villageDTO);
-
-        return convertToDto(villageService.updateVillage(villageEntity));
     }
 
     @GetMapping("/{villageId}/buildings")
