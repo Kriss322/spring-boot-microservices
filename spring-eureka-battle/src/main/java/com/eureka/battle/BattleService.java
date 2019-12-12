@@ -1,8 +1,8 @@
 package com.eureka.battle;
-
+/*
 import com.tribe.Tribes.village.Village;
 import com.tribe.Tribes.village.VillageDTO;
-import org.modelmapper.ModelMapper;
+import org.modelmapper.ModelMapper;*/
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class BattleService {
 
-    private static ModelMapper modelMapper = new ModelMapper();
+    //private static ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
     private BattleRepository battleRepository;
@@ -31,14 +31,14 @@ public class BattleService {
     }
 
     public BattleStats newBattle(BattleStats battleStats) {
-        simulateBattle(battleStats);
+        //simulateBattle(battleStats);
         return battleRepository.save(battleStats);
     }
 
     public void delete(Integer id) {
         battleRepository.deleteById(id);
     }
-
+/*
     public void simulateBattle(BattleStats battleStats){
 
         String gameServiceURL = "http://game-service";
@@ -75,5 +75,5 @@ public class BattleService {
     public static Village convertToEntity(VillageDTO villageDto) {
         Village village = modelMapper.map(villageDto, Village.class);
         return village;
-    }
+    }*/
 }

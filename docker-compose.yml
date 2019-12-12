@@ -1,8 +1,8 @@
 version: '3'
 services:
   mysqldb:
-    image: mysql:5.7
-    container_name: mysqldb
+    gamelogic_db: mysql:5.7
+    container_name: gamelogic_db
     ports:
       - "3306:3306"
         environment:
@@ -11,8 +11,35 @@ services:
         #MYSQL_PASSWORD: password
         MYSQL_DATABASE: tribes_db
     volumes:
-        - dbdata:/var/lib/mysql/
+        - mysql_gamelogic_db:/var/lib/mysql/
 
+    mysql_battle_db:
+    image: mysql:5.7
+    container_name: battle_db
+    ports:
+      - "3306:3306"
+        environment:
+        MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+        MYSQL_USER: root
+        #MYSQL_PASSWORD: password
+        MYSQL_DATABASE: battle_db
+    volumes:
+        - mysql_battle_db:/var/lib/mysql/
+    
+    mysql_player_db:
+    image: mysql:5.7
+    container_name: player_db
+    ports:
+      - "3306:3306"
+        environment:
+        MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+        MYSQL_USER: root
+        #MYSQL_PASSWORD: password
+        MYSQL_DATABASE: player_db
+    volumes:
+        - mysql_player_db:/var/lib/mysql/
+        
+        
   rabbitmq:
     container_name: rabbitmq
     image: 'rabbitmq:management'
@@ -39,44 +66,31 @@ services:
     image: auth-server:latest
     ports:
       - "9100:9100"
-    entrypoint: /bin/sh
-    command: >
-      -c "
-      while ! (nc -z common-server 9200 && nc -z vault 8200); do sleep 5; echo 'Waiting for vault and common-server services to start-up...'; done;
-      java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8787,suspend=n -jar -Dspring.profiles.active=docker /app.jar
-      "
-      
+
   eureka-server:
     container_name: eureka-server
     image: eureka-server:latest
     ports:
       - "8761:8761"
-    entrypoint: /bin/sh
-    command: >
-      -c "
-      while ! (nc -z common-server 9200 && nc -z vault 8200); do sleep 5; echo 'Waiting for vault and common-server services to start-up...'; done;
-      java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8787,suspend=n -jar -Dspring.profiles.active=docker /app.jar
-      "
-      
+
   zuul-gateway:
     container_name: zuul-gateway
     image: zuul-gateway:latest
     ports:
       - "8762:8762"
-    entrypoint: /bin/sh
-    command: >
-      -c "
-      while ! (nc -z common-server 9200 && nc -z vault 8200); do sleep 5; echo 'Waiting for vault and common-server services to start-up...'; done;
-      java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8787,suspend=n -jar -Dspring.profiles.active=docker /app.jar
-      "
-      
-      
+
   message-service:
     container_name: message-service
     image: message-service:latest
     ports:
       - "9300:9300"
-
+      
+  battle-service:
+    container_name: battle-service
+    image: message-service:latest
+    ports:
+      - "9301:9301"
+      
   game-service:
     container_name: game-service
     image: game-service:latest
@@ -91,12 +105,10 @@ services:
       restart_policy:
         condition: on-failure
     ports:
-      - "8301:8301"
-      - "8300:8300"
-    entrypoint: /bin/sh
-    command: >
-      -c "
-      while ! (nc -z common-server 9200 && nc -z vault 8200); do sleep 5; echo 'Waiting for vault and common-server services to start-up...'; done;
-      java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8787,suspend=n -jar -Dspring.profiles.active=docker /app.jar
-      "  
+      - "8401:8401"
+      - "8400:8400"
+volumes:
+    mysql_player_db:
+    mysql_battle_db:
+    mysql_gamelogic_db:
       
