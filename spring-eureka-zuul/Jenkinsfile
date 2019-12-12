@@ -1,0 +1,34 @@
+node {
+
+    withMaven(maven:'maven') {
+
+        stage('Checkout') {
+            git url: 'https://github.com/Kriss322/spring-boot-microservices.git', credentialsId: 'Kriss322', branch: 'master'
+        }
+
+        stage('Build') {
+            sh 'mvn clean install'
+
+            def pom = readMavenPom file:'pom.xml'
+            print pom.version
+            env.version = pom.version
+        }
+
+        stage('Image') {
+            dir ('spring-eureka-zuul') {
+                def app = docker.build "http://52.56.215.59:5000/spring-eureka-zuul:${env.version}"
+                app.push()
+            }
+        }
+
+        stage ('Run') {
+            docker.image("http://52.56.215.59:5000/spring-eureka-zuul:${env.version}").run('-p 8762:8762 -h gateway --name gateway')
+        }
+
+        stage ('Final') {
+            build job: 'gateway-service-pipeline', wait: false
+        }      
+
+    }
+
+}
